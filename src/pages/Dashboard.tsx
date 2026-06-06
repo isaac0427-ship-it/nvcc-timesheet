@@ -226,6 +226,26 @@ export default function Dashboard({ onLogout }: Props) {
                   </div>
                 )}
 
+                <button
+                  onClick={() => {
+                    const test: Student[] = [
+                      { name: "Marcus Johnson",  department: "WIOA Out Of School", studentId: "WD-2024-01" },
+                      { name: "Destiny Rivera",  department: "WIOA Out Of School", studentId: "WD-2024-02" },
+                      { name: "Jaylen Thompson", department: "WIOA Out Of School", studentId: "WD-2024-03" },
+                      { name: "Aaliyah Cruz",    department: "WIOA Out Of School", studentId: "WD-2024-04" },
+                      { name: "Kevin Martinez",  department: "WIOA Out Of School", studentId: "WD-2024-05" },
+                    ];
+                    saveStudents(test);
+                    setStudents(test);
+                    setSelectedStudentIdx(0);
+                    setCsvSuccess(true);
+                    setCsvError([]);
+                  }}
+                  className="w-full mt-2 border border-dashed border-slate-300 hover:border-[#003087] text-slate-400 hover:text-[#003087] rounded-xl py-2 text-[10px] font-bold uppercase tracking-widest transition"
+                >
+                  Load Test Data (5 students)
+                </button>
+
                 {students.length === 0 && !csvSuccess && (
                   <p className="text-[10px] text-slate-400 mt-2 text-center">
                     No students loaded. Upload a CSV to begin.
