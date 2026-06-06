@@ -5,7 +5,7 @@ import Dashboard from "./pages/Dashboard";
 type View = "login" | "tracy";
 
 const TRACY_EMAIL = "tracy.mahar@ctstate.edu";
-const TRACY_PASS  = "WAVE2024";
+const TRACY_PASS  = import.meta.env.VITE_SUPERVISOR_PASSWORD as string ?? "";
 const SESSION_KEY = "nvcc-auth-v2";
 
 export default function App() {
