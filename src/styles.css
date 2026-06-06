@@ -1,83 +1,130 @@
 @import "tailwindcss";
 
-@theme inline {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --color-nvcc-blue: #003087;
-  --color-nvcc-blue-dark: #002060;
-  --color-nvcc-blue-light: #e8eef6;
+:root {
+  --ct-navy: #003087;
+  --ct-gold: #eec900;
+  --ct-pink: #ffe4ea;
 }
 
-@layer base {
-  body {
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    background: #f1f5f9;
-  }
+/* ── Print portal: hidden on screen, shown only when printing ── */
+.print-portal {
+  display: none;
 }
 
-/* ── Print styles ─────────────────────────────────────────────────────── */
 @media print {
   @page {
     size: letter portrait;
-    margin: 0.45in 0.5in;
+    margin: 0.18in 0.28in;
+  }
+
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
   }
 
   .no-print {
     display: none !important;
   }
 
-  body {
-    background: white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 9.5pt;
-    color: black;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+  .print-portal {
+    display: block !important;
   }
 
-  /* Remove card shadows and rounded corners for print */
-  .timesheet-card {
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-    max-width: none !important;
-    margin: 0 !important;
+  .ts-print-break {
+    page-break-after: always;
+    break-after: page;
   }
 
-  .ts-header-title {
-    font-size: 13pt !important;
-    font-weight: bold;
+  .ts-print-break:last-child {
+    page-break-after: auto;
+    break-after: auto;
   }
 
-  .ts-header-sub {
-    font-size: 9.5pt !important;
+  /* Watermark: fixed so it appears on every page */
+  .ts-watermark {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
   }
+}
 
-  .ts-info-table {
-    font-size: 9.5pt !important;
-  }
+/* ── Timesheet styles ─────────────────────────────────── */
 
-  .ts-week-table {
-    font-size: 9pt !important;
-    page-break-inside: avoid;
-  }
+.ts-page {
+  background-color: #ffe4ea;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color-adjust: exact;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9pt;
+  color: #000;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.18in;
+}
 
-  .ts-week-table th {
-    background: #d0d0d0 !important;
-    font-size: 8pt !important;
-  }
+.ts-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: 1.9rem;
+  font-weight: 900;
+  color: rgba(0, 0, 80, 0.055);
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+}
 
-  .ts-data-row {
-    height: 22pt !important;
-  }
+.ts-content {
+  position: relative;
+  z-index: 1;
+}
 
-  .ts-sig-section {
-    font-size: 9.5pt !important;
-    page-break-inside: avoid;
-  }
+.ts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8.5pt;
+}
 
-  .ts-payroll-box {
-    font-size: 9.5pt !important;
-    page-break-inside: avoid;
-  }
+.ts-table th,
+.ts-table td {
+  border: 1px solid #000;
+  padding: 1.5px 3px;
+  vertical-align: middle;
+}
+
+.ts-table th {
+  background-color: #003087;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  font-size: 7pt;
+  letter-spacing: 0.04em;
+}
+
+.ts-week-sep td {
+  background-color: #dde6f0 !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  font-size: 7pt;
+  font-weight: bold;
+  text-align: center;
+  height: 10pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ts-row {
+  height: 17pt;
 }

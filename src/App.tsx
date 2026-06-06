@@ -1,14 +1,37 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Admin from "./pages/Admin";
+import { useState } from "react";
+import LoginPage from "./pages/LoginPage";
+import Dashboard from "./pages/Dashboard";
+
+type View = "login" | "tracy";
+
+const TRACY_EMAIL = "tracy.mahar@ctstate.edu";
+const TRACY_PASS  = "WAVE2024";
+const SESSION_KEY = "nvcc-auth-v2";
 
 export default function App() {
+  const [view, setView] = useState<View>(() =>
+    sessionStorage.getItem(SESSION_KEY) === "tracy" ? "tracy" : "login"
+  );
+
+  const handleLogin = () => {
+    sessionStorage.setItem(SESSION_KEY, "tracy");
+    setView("tracy");
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem(SESSION_KEY);
+    setView("login");
+  };
+
+  if (view === "tracy") {
+    return <Dashboard onLogout={handleLogout} />;
+  }
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/admin" element={<Admin />} />
-      </Routes>
-    </BrowserRouter>
+    <LoginPage
+      tracyEmail={TRACY_EMAIL}
+      tracyPassword={TRACY_PASS}
+      onLoginTracy={handleLogin}
+    />
   );
 }

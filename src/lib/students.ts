@@ -1,9 +1,9 @@
-const STORAGE_KEY = "nvcc-students";
+const STORAGE_KEY = "nvcc-students-v2";
 
 export interface Student {
   name: string;
   department: string;
-  type: string;
+  studentId: string;
 }
 
 export function getStudents(): Student[] {
@@ -25,34 +25,36 @@ export function clearStudents(): void {
 }
 
 export function parseStudentCSV(text: string): { students: Student[]; errors: string[] } {
-  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   if (!lines.length) return { students: [], errors: ["CSV file is empty"] };
 
   const students: Student[] = [];
   const errors: string[] = [];
   let startLine = 0;
 
-  // Detect and skip header row
   const firstLower = lines[0].toLowerCase();
-  if (firstLower.startsWith("name") || firstLower.includes("department") || firstLower.includes("type")) {
+  if (
+    firstLower.startsWith("name") ||
+    firstLower.includes("department") ||
+    firstLower.includes("student")
+  ) {
     startLine = 1;
   }
 
   for (let i = startLine; i < lines.length; i++) {
-    const line = lines[i];
-    const cols = splitCSVLine(line);
+    const cols = splitCSVLine(lines[i]);
     if (cols.length < 2) {
-      errors.push(`Line ${i + 1}: expected at least 2 columns (name, department), got "${line}"`);
+      errors.push(`Row ${i + 1}: expected name, department[, studentId] — got "${lines[i]}"`);
       continue;
     }
     const name = cols[0].trim();
     const department = cols[1].trim();
-    const type = (cols[2] ?? "Student").trim() || "Student";
+    const studentId = (cols[2] ?? "").trim();
     if (!name) {
-      errors.push(`Line ${i + 1}: empty name`);
+      errors.push(`Row ${i + 1}: empty name`);
       continue;
     }
-    students.push({ name, department, type });
+    students.push({ name, department, studentId });
   }
 
   return { students, errors };
