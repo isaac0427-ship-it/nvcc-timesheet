@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --ct-navy: #003087;
-  --ct-gold: #eec900;
-  --ct-pink: #ffe4ea;
+  --ct-navy: #1B3A6B;
+  --ct-gold: #C5A028;
+  --ct-pink: #FFE4EA;
 }
 
 /* ── Print portal: hidden on screen, shown only when printing ── */
@@ -42,7 +42,6 @@
     break-after: auto;
   }
 
-  /* Watermark: fixed so it appears on every page */
   .ts-watermark {
     position: fixed !important;
     top: 50% !important;
@@ -53,7 +52,7 @@
 /* ── Timesheet styles ─────────────────────────────────── */
 
 .ts-page {
-  background-color: #ffe4ea;
+  background-color: #FFE4EA;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   color-adjust: exact;
@@ -103,7 +102,7 @@
 }
 
 .ts-table th {
-  background-color: #003087;
+  background-color: #1B3A6B;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   color: white;
@@ -113,18 +112,18 @@
   letter-spacing: 0.04em;
 }
 
-.ts-week-sep td {
-  background-color: #dde6f0 !important;
+.ts-subtotal td {
+  background-color: #e8edf5 !important;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
-  font-size: 7pt;
+  font-size: 7.5pt;
   font-weight: bold;
-  text-align: center;
-  height: 10pt;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+}
+
+.ts-week2 {
+  background-color: rgba(0, 0, 48, 0.015);
 }
 
 .ts-row {
-  height: 17pt;
+  height: 15pt;
 }
