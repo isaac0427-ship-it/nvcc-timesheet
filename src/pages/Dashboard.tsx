@@ -11,7 +11,7 @@ const NAVY = "#1B3A6B";
 const TEST_STUDENT: Student = {
   name: "Isaac Nova",
   department: "WIOA Out Of School",
-  studentId: "WD-2024-01",
+  studentId: "Naugatuck Valley CC",
 };
 
 const BLANK_STUDENT: Student = { name: "", department: "", studentId: "" };
@@ -203,6 +203,25 @@ export default function Dashboard({ onLogout }: Props) {
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-6xl mx-auto p-6 space-y-6">
 
+            {/* ── Section 1: Timesheet Generator ── */}
+            <div>
+              <div className="flex items-center gap-3 mb-5">
+                <div
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                  style={{ background: NAVY }}
+                >
+                  <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                  </svg>
+                  <p className="text-white font-black text-[10px] uppercase tracking-widest">Section 1</p>
+                </div>
+                <h2 className="font-black text-base uppercase tracking-wider" style={{ color: NAVY }}>
+                  Timesheet Generator
+                </h2>
+                <div className="flex-1 h-px bg-slate-200" />
+                <span className="text-[10px] text-slate-400 font-medium">WIOA Out Of School · FY 2027</span>
+              </div>
+
             {/* ── Three Action Buttons ── */}
             <div className="flex gap-4">
               <ActionCard
@@ -389,7 +408,65 @@ export default function Dashboard({ onLogout }: Props) {
                   </div>
                 </div>
               )}
-            </div>
+            </div>{/* end active panel */}
+
+            </div>{/* end Section 1 */}
+
+            {/* ── Section 2: Student Tracker ── */}
+            <div>
+              <div className="flex items-center gap-3 mb-5">
+                <div
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg"
+                  style={{ background: NAVY }}
+                >
+                  <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                  </svg>
+                  <p className="text-white font-black text-[10px] uppercase tracking-widest">Section 2</p>
+                </div>
+                <h2 className="font-black text-base uppercase tracking-wider" style={{ color: NAVY }}>
+                  Student Tracker
+                </h2>
+                <div className="flex-1 h-px bg-slate-200" />
+              </div>
+
+              {/* Coming soon banner */}
+              <div
+                className="rounded-2xl overflow-hidden border"
+                style={{ borderColor: NAVY }}
+              >
+                <div
+                  className="px-8 py-10 flex items-center justify-between"
+                  style={{ background: NAVY }}
+                >
+                  <div>
+                    <div
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest mb-3"
+                      style={{ background: "#C5A028", color: "#000" }}
+                    >
+                      Coming Soon
+                    </div>
+                    <h3 className="text-white font-black text-xl mb-1">Student Tracker</h3>
+                    <p className="text-white/60 text-sm leading-relaxed max-w-md">
+                      Track attendance, hours, progress notes, and program outcomes for every WIOA Out Of School student — all in one place.
+                    </p>
+                  </div>
+                  <div className="hidden md:flex items-center justify-center w-20 h-20 rounded-2xl" style={{ background: "rgba(255,255,255,0.08)" }}>
+                    <svg className="w-10 h-10 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" />
+                    </svg>
+                  </div>
+                </div>
+                <div className="px-8 py-4 flex items-center gap-4" style={{ background: "#162f56" }}>
+                  <svg className="w-4 h-4 shrink-0" style={{ color: "#C5A028" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                  </svg>
+                  <p className="text-white/50 text-xs">
+                    <span style={{ color: "#C5A028" }} className="font-bold">WAVE Program</span> · CT State Naugatuck Valley · WIOA Out Of School
+                  </p>
+                </div>
+              </div>
+            </div>{/* end Section 2 */}
 
             {/* ── Student Roster ── */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
@@ -407,7 +484,7 @@ export default function Dashboard({ onLogout }: Props) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                   </svg>
                   <p className="text-xs font-semibold text-slate-400 group-hover:text-blue-500 transition">Upload CSV</p>
-                  <p className="text-[10px] text-slate-300 mt-0.5">Name, Department, StudentID</p>
+                  <p className="text-[10px] text-slate-300 mt-0.5">Name, Department, Work Location</p>
                 </div>
                 <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onFileChange} className="hidden" />
               </div>
@@ -430,7 +507,7 @@ export default function Dashboard({ onLogout }: Props) {
 
               {isTestMode && (
                 <div className="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-500 mb-2">
-                  <span className="font-bold text-slate-600">Test student:</span> Isaac Nova — WIOA Out Of School (WD-2024-01)
+                  <span className="font-bold text-slate-600">Test student:</span> Isaac Nova — WIOA Out Of School · Naugatuck Valley CC
                 </div>
               )}
 

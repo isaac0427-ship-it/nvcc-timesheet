@@ -11,13 +11,11 @@ interface Props {
 
 function CTStateLogo() {
   return (
-    <svg width="180" height="44" viewBox="0 0 180 44" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4,2 L38,2 L38,26 L21,40 L4,26 Z" fill={NAVY} />
-      <rect x="4" y="16" width="34" height="2.5" fill="white" />
-      <text x="21" y="15" textAnchor="middle" fill="white" fontSize="9" fontWeight="900" fontFamily="Arial,sans-serif">CT</text>
-      <text x="21" y="28" textAnchor="middle" fill="#C5A028" fontSize="6" fontWeight="700" fontFamily="Arial,sans-serif" letterSpacing="1.5">STATE</text>
-      <text x="46" y="18" fill={NAVY} fontSize="14" fontWeight="900" fontFamily="Arial,sans-serif">CT STATE</text>
-      <text x="46" y="32" fill={NAVY} fontSize="9.5" fontWeight="500" fontFamily="Arial,sans-serif">Naugatuck Valley</text>
+    <svg width="42" height="44" viewBox="0 0 42 44" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2,2 L40,2 L40,28 L21,42 L2,28 Z" fill={NAVY} />
+      <rect x="2" y="17" width="38" height="2.5" fill="white" />
+      <text x="21" y="16" textAnchor="middle" fill="white" fontSize="10" fontWeight="900" fontFamily="Arial,sans-serif">CT</text>
+      <text x="21" y="29" textAnchor="middle" fill="#C5A028" fontSize="6.5" fontWeight="700" fontFamily="Arial,sans-serif" letterSpacing="1.5">STATE</text>
     </svg>
   );
 }
@@ -124,15 +122,21 @@ export function Timesheet({ student, period }: Props) {
         <table className="ts-table" style={{ marginBottom: "3px" }}>
           <tbody>
             <tr>
-              <td style={{ ...ic, width: "38%" }}>
+              <td style={{ ...ic, width: "36%" }}>
                 <div style={lbl}>Employee Name</div>
                 <Val v={student.name} />
               </td>
-              <td style={{ ...ic, width: "38%" }}>
+              <td style={{ ...ic, width: "36%" }}>
                 <div style={lbl}>Department / Program</div>
                 <Val v={student.department} />
               </td>
-              <td style={{ ...ic, width: "24%" }}>
+              <td style={{ ...ic, width: "28%" }}>
+                <div style={lbl}>Work Location / School</div>
+                <Val v={student.studentId} />
+              </td>
+            </tr>
+            <tr>
+              <td style={ic} colSpan={3}>
                 <div style={lbl}>Pay Period</div>
                 <div style={val}>{formatRangeFull(period)}</div>
               </td>
@@ -270,7 +274,7 @@ export function Timesheet({ student, period }: Props) {
                 <div style={{ flex: 1, ...sigLine }} />
                 <div style={{ width: "64px", textAlign: "center", flexShrink: 0 }}>
                   <div style={{ fontSize: "5.5pt", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "0.05em", color: "#444", marginBottom: "14px" }}>
-                    Total Hours
+                    Sub Total Hrs
                   </div>
                   <div style={sigLine} />
                 </div>

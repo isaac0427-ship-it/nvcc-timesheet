@@ -60,13 +60,11 @@ function buildHTML(student: Student, period: PayPeriod): string {
 <div class="page">
   <!-- Header -->
   <div style="display:flex;align-items:center;gap:8px;border-bottom:3px solid #1B3A6B;padding-bottom:5px;margin-bottom:4px">
-    <svg width="180" height="44" viewBox="0 0 180 44" xmlns="http://www.w3.org/2000/svg">
-      <path d="M4,2 L38,2 L38,26 L21,40 L4,26 Z" fill="#1B3A6B"/>
-      <rect x="4" y="16" width="34" height="2.5" fill="white"/>
-      <text x="21" y="15" text-anchor="middle" fill="white" font-size="9" font-weight="900" font-family="Arial,sans-serif">CT</text>
-      <text x="21" y="28" text-anchor="middle" fill="#C5A028" font-size="6" font-weight="700" font-family="Arial,sans-serif" letter-spacing="1.5">STATE</text>
-      <text x="46" y="18" fill="#1B3A6B" font-size="14" font-weight="900" font-family="Arial,sans-serif">CT STATE</text>
-      <text x="46" y="32" fill="#1B3A6B" font-size="9.5" font-weight="500" font-family="Arial,sans-serif">Naugatuck Valley</text>
+    <svg width="42" height="44" viewBox="0 0 42 44" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2,2 L40,2 L40,28 L21,42 L2,28 Z" fill="#1B3A6B"/>
+      <rect x="2" y="17" width="38" height="2.5" fill="white"/>
+      <text x="21" y="16" text-anchor="middle" fill="white" font-size="10" font-weight="900" font-family="Arial,sans-serif">CT</text>
+      <text x="21" y="29" text-anchor="middle" fill="#C5A028" font-size="6.5" font-weight="700" font-family="Arial,sans-serif" letter-spacing="1.5">STATE</text>
     </svg>
     <div style="flex:1;text-align:center">
       <div style="font-size:11pt;font-weight:900;letter-spacing:.04em;color:#1B3A6B">NAUGATUCK VALLEY COMMUNITY COLLEGE</div>
@@ -81,9 +79,12 @@ function buildHTML(student: Student, period: PayPeriod): string {
   <table style="margin-bottom:3px">
     <tbody>
       <tr>
-        <td style="${ic};width:38%"><div style="${lbl}">Employee Name</div>${nameCell}</td>
-        <td style="${ic};width:38%"><div style="${lbl}">Department / Program</div>${deptCell}</td>
-        <td style="${ic};width:24%"><div style="${lbl}">Pay Period</div><div style="${val}">${formatRangeFull(period)}</div></td>
+        <td style="${ic};width:36%"><div style="${lbl}">Employee Name</div>${nameCell}</td>
+        <td style="${ic};width:36%"><div style="${lbl}">Department / Program</div>${deptCell}</td>
+        <td style="${ic};width:28%"><div style="${lbl}">Work Location / School</div><div style="${val}">${student.studentId || "&nbsp;"}</div></td>
+      </tr>
+      <tr>
+        <td style="${ic}" colspan="3"><div style="${lbl}">Pay Period</div><div style="${val}">${formatRangeFull(period)}</div></td>
       </tr>
       <tr>
         <td style="${ic};font-size:8pt" colspan="3">
@@ -159,7 +160,7 @@ function buildHTML(student: Student, period: PayPeriod): string {
         <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:4px">
           <div style="flex:1;${sigLine}"></div>
           <div style="width:64px;text-align:center;flex-shrink:0">
-            <div style="font-size:5.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:14px">Total Hours</div>
+            <div style="font-size:5.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:14px">Sub Total Hrs</div>
             <div style="${sigLine}"></div>
           </div>
         </div>
