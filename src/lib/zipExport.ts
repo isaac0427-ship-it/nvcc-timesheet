@@ -19,9 +19,7 @@ function buildHTML(student: Student, period: PayPeriod): string {
     ? `<div style="${val}">${student.department}</div>`
     : `<div style="${blankLine}">&nbsp;</div>`;
 
-  const sigLbl = `font-size:6.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:18px`;
   const sigLine = `border-bottom:1px solid #000;margin-bottom:4px`;
-  const dateLbl = `font-size:6pt;font-weight:bold;text-transform:uppercase;letter-spacing:.05em;color:#555;margin-top:6px;margin-bottom:12px`;
 
   const week1Rows = week1.map((day) => `
     <tr style="height:15pt">
@@ -81,7 +79,7 @@ function buildHTML(student: Student, period: PayPeriod): string {
       <tr>
         <td style="${ic};width:36%"><div style="${lbl}">Employee Name</div>${nameCell}</td>
         <td style="${ic};width:36%"><div style="${lbl}">Department / Program</div>${deptCell}</td>
-        <td style="${ic};width:28%"><div style="${lbl}">Work Location / School</div><div style="${val}">${student.studentId || "&nbsp;"}</div></td>
+        <td style="${ic};width:28%"><div style="${lbl}">Work Location / School</div><div style="${val}">${student.workLocation || "&nbsp;"}</div></td>
       </tr>
       <tr>
         <td style="${ic}" colspan="3"><div style="${lbl}">Pay Period</div><div style="${val}">${formatRangeFull(period)}</div></td>
@@ -129,44 +127,27 @@ function buildHTML(student: Student, period: PayPeriod): string {
     <span style="margin-right:16px"><span style="font-size:6.5pt;font-weight:bold;text-transform:uppercase;color:#555">Grant Title:</span> <strong>WIOA Out Of School</strong></span>
     <span><span style="font-size:6.5pt;font-weight:bold;text-transform:uppercase;color:#555">Percentage:</span> <strong>100%</strong></span>
   </div>
+  <!-- Total Hours box -->
+  <div style="display:flex;justify-content:flex-end;margin-bottom:3px">
+    <div style="border:2px solid #1B3A6B;padding:4px 10px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:7.5pt;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:#1B3A6B">Total Hours For Pay Period:</span>
+      <div style="border-bottom:1.5px solid #000;width:64px">&nbsp;</div>
+    </div>
+  </div>
   <!-- Certification + Signatures -->
   <div style="border:1px solid #000;padding:5px 7px;margin-bottom:3px">
-    <p style="font-size:7pt;font-style:italic;margin-bottom:8px;line-height:1.35">I certify that the above time record is correct and that I worked the hours stated herein in the performance of my official duties. I further certify that I did not receive payment from any other source for these hours.</p>
-    <!-- Row 1: Employee + Supervisor -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:6px">
-      <div>
-        <div style="${sigLbl}">Employee Signature</div>
+    <p style="font-size:6.5pt;font-style:italic;margin-bottom:5px;line-height:1.35">I certify that the above time record is correct and that I worked the hours stated herein in the performance of my official duties. I further certify that I did not receive payment from any other source for these hours.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
+      ${["Employee","Supervisor","Educational Assistant","WAVE Coordinator"].map(title => `
+      <div style="padding:5px 6px 5px 6px;border-top:1px solid #ccc">
+        <div style="font-size:6.5pt;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#1B3A6B;margin-bottom:5px">${title}</div>
+        <div style="font-size:5.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#666;margin-bottom:8px;margin-top:4px">Name</div>
         <div style="${sigLine}"></div>
-        <div style="${dateLbl}">Date</div>
+        <div style="font-size:5.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#666;margin-bottom:8px;margin-top:4px">Signature</div>
         <div style="${sigLine}"></div>
-      </div>
-      <div>
-        <div style="${sigLbl}">Supervisor Signature</div>
+        <div style="font-size:5.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.04em;color:#666;margin-bottom:8px;margin-top:4px">Date</div>
         <div style="${sigLine}"></div>
-        <div style="${dateLbl}">Date</div>
-        <div style="${sigLine}"></div>
-      </div>
-    </div>
-    <!-- Row 2: Educational Assistant + WAVE Coordinator -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div>
-        <div style="${sigLbl}">Educational Assistant Signature</div>
-        <div style="${sigLine}"></div>
-        <div style="${dateLbl}">Date</div>
-        <div style="${sigLine}"></div>
-      </div>
-      <div>
-        <div style="${sigLbl}">WAVE Coordinator Signature</div>
-        <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:4px">
-          <div style="flex:1;${sigLine}"></div>
-          <div style="width:64px;text-align:center;flex-shrink:0">
-            <div style="font-size:5.5pt;font-weight:bold;text-transform:uppercase;letter-spacing:.05em;color:#444;margin-bottom:14px">Sub Total Hrs</div>
-            <div style="${sigLine}"></div>
-          </div>
-        </div>
-        <div style="${dateLbl}">Date</div>
-        <div style="${sigLine}"></div>
-      </div>
+      </div>`).join("")}
     </div>
   </div>
   <!-- Footer -->
