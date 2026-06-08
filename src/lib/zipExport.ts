@@ -137,7 +137,7 @@ function buildHTML(student: Student, period: PayPeriod): string {
   <!-- Certification + Signatures -->
   <div style="border:1px solid #000;padding:5px 7px;margin-bottom:3px">
     <p style="font-size:6.5pt;font-style:italic;margin-bottom:5px;line-height:1.35">I certify that the above time record is correct and that I worked the hours stated herein in the performance of my official duties. I further certify that I did not receive payment from any other source for these hours.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 10px">
+    <div>
       ${["Employee","Supervisor","Educational Assistant","WAVE Coordinator"].map(title => `
       <div style="padding:5px 6px 5px 6px;border-top:1px solid #ccc">
         <div style="font-size:6.5pt;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#1B3A6B;margin-bottom:5px">${title}</div>

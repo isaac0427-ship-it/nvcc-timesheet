@@ -158,7 +158,7 @@ export function Timesheet({ student, period }: Props) {
             I certify that the above time record is correct and that I worked the hours stated herein in the
             performance of my official duties. I further certify that I did not receive payment from any other source for these hours.
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 10px" }}>
+          <div>
             <SigBlock title="Employee" />
             <SigBlock title="Supervisor" />
             <SigBlock title="Educational Assistant" />
