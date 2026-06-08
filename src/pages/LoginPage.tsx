@@ -5,8 +5,7 @@ const GOLD = "#C5A028";
 
 interface Props {
   supervisorPassword: string;
-  onLoginSupervisor: () => void;
-  onLoginStudent: () => void;
+  onLogin: () => void;
 }
 
 function Shield({ size = 72 }: { size?: number }) {
@@ -21,7 +20,7 @@ function Shield({ size = 72 }: { size?: number }) {
   );
 }
 
-export default function LoginPage({ supervisorPassword, onLoginSupervisor, onLoginStudent }: Props) {
+export default function LoginPage({ supervisorPassword, onLogin }: Props) {
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState(false);
@@ -29,7 +28,7 @@ export default function LoginPage({ supervisorPassword, onLoginSupervisor, onLog
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === supervisorPassword) {
-      onLoginSupervisor();
+      onLogin();
     } else {
       setError(true);
     }
@@ -40,7 +39,6 @@ export default function LoginPage({ supervisorPassword, onLoginSupervisor, onLog
       className="min-h-screen flex flex-col items-center justify-center p-4"
       style={{ background: `linear-gradient(150deg, #0f2040 0%, ${NAVY} 55%, #264d8f 100%)` }}
     >
-      {/* Branding */}
       <div className="mb-8 text-center select-none">
         <div className="flex justify-center mb-4">
           <Shield size={72} />
@@ -53,17 +51,16 @@ export default function LoginPage({ supervisorPassword, onLoginSupervisor, onLog
         </p>
       </div>
 
-      <div className="w-full max-w-[360px] space-y-3">
-        {/* Supervisor sign-in card */}
+      <div className="w-full max-w-[360px]">
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          <div className="px-5 py-3 border-b border-slate-100" style={{ background: NAVY }}>
-            <p className="text-white font-black text-[10px] uppercase tracking-widest">Supervisor Sign In</p>
-            <p className="text-white/50 text-[9px] mt-0.5">CT State Naugatuck Valley</p>
+          <div className="px-5 py-3" style={{ background: NAVY }}>
+            <p className="text-white font-black text-[10px] uppercase tracking-widest">Sign In</p>
+            <p className="text-white/50 text-[9px] mt-0.5">CT State Naugatuck Valley · WAVE Program</p>
           </div>
           <form onSubmit={handleSubmit} className="p-5 space-y-4">
             <div>
               <label className="block text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 mb-2">
-                Enter Supervisor Password
+                Password
               </label>
               <div className="relative">
                 <input
@@ -116,22 +113,6 @@ export default function LoginPage({ supervisorPassword, onLoginSupervisor, onLog
             </button>
           </form>
         </div>
-
-        {/* Student portal — coming soon */}
-        <button
-          onClick={onLoginStudent}
-          className="w-full rounded-2xl p-4 text-center border transition-all hover:bg-white/10"
-          style={{ borderColor: "rgba(255,255,255,0.2)" }}
-        >
-          <span
-            className="inline-block text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-full mb-1"
-            style={{ background: GOLD, color: "#000" }}
-          >
-            Coming Soon
-          </span>
-          <p className="text-white font-bold text-sm mt-1">Student Portal</p>
-          <p className="text-white/40 text-[10px] mt-0.5">View your semester timesheets</p>
-        </button>
       </div>
     </div>
   );

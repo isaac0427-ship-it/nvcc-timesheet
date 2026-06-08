@@ -1,39 +1,26 @@
 import { useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
-import StudentPortal from "./pages/StudentPortal";
 
-type View = "login" | "supervisor" | "student";
-
-const PASS = (import.meta.env.VITE_SUPERVISOR_PASSWORD as string) ?? "";
+const PASS = (import.meta.env.VITE_SUPERVISOR_PASSWORD as string) || "WAVE2024";
 const SESSION_KEY = "nvcc-auth-v2";
 
 export default function App() {
-  const [view, setView] = useState<View>(() => {
-    const s = sessionStorage.getItem(SESSION_KEY);
-    if (s === "supervisor") return "supervisor";
-    if (s === "student") return "student";
-    return "login";
-  });
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem(SESSION_KEY) === "supervisor");
 
   const logout = () => {
     sessionStorage.removeItem(SESSION_KEY);
-    setView("login");
+    setAuthed(false);
   };
 
-  if (view === "supervisor") return <Dashboard onLogout={logout} />;
-  if (view === "student") return <StudentPortal onBack={logout} />;
+  if (authed) return <Dashboard onLogout={logout} />;
 
   return (
     <LoginPage
       supervisorPassword={PASS}
-      onLoginSupervisor={() => {
+      onLogin={() => {
         sessionStorage.setItem(SESSION_KEY, "supervisor");
-        setView("supervisor");
-      }}
-      onLoginStudent={() => {
-        sessionStorage.setItem(SESSION_KEY, "student");
-        setView("student");
+        setAuthed(true);
       }}
     />
   );

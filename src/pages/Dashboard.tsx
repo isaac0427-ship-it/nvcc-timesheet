@@ -7,8 +7,16 @@ import type { PayPeriod } from "../data/payPeriods";
 import { downloadTimesheetsZip } from "../lib/zipExport";
 
 const NAVY = "#1B3A6B";
-const GOLD = "#C5A028";
 
+const TEST_STUDENT: Student = {
+  name: "Isaac Nova",
+  department: "WIOA Out Of School",
+  studentId: "WD-2024-01",
+};
+
+const BLANK_STUDENT: Student = { name: "", department: "", studentId: "" };
+
+type Mode = "byPeriod" | "forStudent" | "all";
 interface PrintItem { student: Student; period: PayPeriod; }
 interface Props { onLogout: () => void; }
 
@@ -16,82 +24,113 @@ interface Props { onLogout: () => void; }
 function Header({ onLogout }: { onLogout: () => void }) {
   return (
     <header
-      className="no-print flex items-center justify-between px-5 shrink-0"
-      style={{ background: NAVY, borderBottom: `3px solid ${GOLD}`, minHeight: "56px" }}
+      className="no-print flex items-center justify-between px-6 shrink-0"
+      style={{ background: NAVY, borderBottom: "3px solid #C5A028", minHeight: "56px" }}
     >
       <div className="flex items-center gap-3">
-        <svg width="144" height="38" viewBox="0 0 144 38" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2,2 L28,2 L28,22 L15,34 L2,22 Z" fill="white" fillOpacity="0.15" stroke="white" strokeWidth="1" />
-          <line x1="2" y1="14" x2="28" y2="14" stroke="white" strokeWidth="2.2" />
-          <text x="15" y="13" textAnchor="middle" fill="white" fontSize="8" fontWeight="900" fontFamily="Arial,sans-serif">CT</text>
-          <text x="15" y="24" textAnchor="middle" fill={GOLD} fontSize="5" fontWeight="700" fontFamily="Arial,sans-serif" letterSpacing="1">STATE</text>
-          <text x="36" y="15" fill="white" fontSize="12" fontWeight="900" fontFamily="Arial,sans-serif">CT STATE</text>
-          <text x="36" y="28" fill="white" fontSize="9" fontWeight="400" fontFamily="Arial,sans-serif" opacity="0.75">Naugatuck Valley</text>
+        <svg width="140" height="36" viewBox="0 0 140 36" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2,2 L26,2 L26,20 L14,31 L2,20 Z" fill="white" fillOpacity="0.15" stroke="white" strokeWidth="1" />
+          <line x1="2" y1="13" x2="26" y2="13" stroke="white" strokeWidth="2" />
+          <text x="14" y="12" textAnchor="middle" fill="white" fontSize="7.5" fontWeight="900" fontFamily="Arial,sans-serif">CT</text>
+          <text x="14" y="23" textAnchor="middle" fill="#C5A028" fontSize="4.5" fontWeight="700" fontFamily="Arial,sans-serif" letterSpacing="1">STATE</text>
+          <text x="34" y="14" fill="white" fontSize="11" fontWeight="900" fontFamily="Arial,sans-serif">CT STATE</text>
+          <text x="34" y="26" fill="white" fontSize="8.5" fontWeight="400" fontFamily="Arial,sans-serif" opacity="0.75">Naugatuck Valley</text>
         </svg>
-        <div className="hidden sm:block h-6 w-px bg-white/20" />
+        <div className="hidden sm:block h-5 w-px bg-white/20" />
         <div className="hidden sm:block">
           <p className="text-white text-xs font-black uppercase tracking-widest">Timesheet Manager</p>
-          <p className="text-white/40 text-[10px] mt-0.5">FY 2027 · WIOA Out Of School</p>
+          <p className="text-white/40 text-[10px]">FY 2027 · WIOA Out Of School</p>
         </div>
       </div>
-      <div className="flex items-center gap-3">
-        <div className="hidden sm:block text-right">
-          <p className="text-white text-xs font-bold">Tracy Mahar</p>
-          <p className="text-white/50 text-[10px]">Program Coordinator</p>
-        </div>
-        <button
-          onClick={onLogout}
-          className="text-white/70 hover:text-white border border-white/20 hover:border-white/50 rounded-lg px-3 py-1.5 text-xs font-semibold transition"
-        >
-          Sign Out
-        </button>
-      </div>
+      <button
+        onClick={onLogout}
+        className="text-white/70 hover:text-white border border-white/20 hover:border-white/50 rounded-lg px-3 py-1.5 text-xs font-semibold transition"
+      >
+        Sign Out
+      </button>
     </header>
   );
 }
 
-/* ── Section heading ── */
-function SectionLabel({ num, title }: { num: string; title: string }) {
+/* ── Big action button card ── */
+function ActionCard({
+  active,
+  onClick,
+  icon,
+  title,
+  subtitle,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+}) {
   return (
-    <div className="flex items-center gap-2 mb-3">
-      <span
-        className="flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-black text-white shrink-0"
-        style={{ background: NAVY }}
+    <button
+      onClick={onClick}
+      className="flex-1 flex flex-col items-center justify-center gap-2 rounded-2xl py-7 px-5 text-center transition-all border-2 hover:shadow-md"
+      style={
+        active
+          ? { background: NAVY, borderColor: NAVY, color: "white" }
+          : { background: "white", borderColor: "#e2e8f0", color: "#1e293b" }
+      }
+    >
+      <div
+        className="w-11 h-11 rounded-xl flex items-center justify-center"
+        style={active ? { background: "rgba(255,255,255,0.15)" } : { background: "#f1f5f9" }}
       >
-        {num}
-      </span>
-      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{title}</p>
-    </div>
+        {icon}
+      </div>
+      <div>
+        <p className="font-black text-sm">{title}</p>
+        <p
+          className="text-xs mt-0.5 leading-snug"
+          style={{ color: active ? "rgba(255,255,255,0.65)" : "#94a3b8" }}
+        >
+          {subtitle}
+        </p>
+      </div>
+    </button>
   );
 }
 
 export default function Dashboard({ onLogout }: Props) {
-  const [students, setStudents]       = useState<Student[]>(() => getStudents());
-  const [selectedName, setSelectedName] = useState<string>(() => getStudents()[0]?.name ?? "");
-  const [search, setSearch]           = useState("");
-  const [periodIdx, setPeriodIdx]     = useState<number>(() => {
+  const [students, setStudents]     = useState<Student[]>(() => getStudents());
+  const [mode, setMode]             = useState<Mode>("forStudent");
+  const [selectedName, setSelectedName] = useState<string>(() => {
+    const s = getStudents();
+    return s.length ? s[0].name : TEST_STUDENT.name;
+  });
+  const [periodIdx, setPeriodIdx]   = useState<number>(() => {
     const cur = findCurrentPayPeriod();
     return cur ? cur.id - 1 : 0;
   });
-  const [fromIdx, setFromIdx]         = useState(0);
-  const [toIdx, setToIdx]             = useState(PAY_PERIODS.length - 1);
-  const [csvErrors, setCsvErrors]     = useState<string[]>([]);
-  const [csvOk, setCsvOk]             = useState(false);
-  const [printQueue, setPrintQueue]   = useState<PrintItem[]>([]);
-  const [isPrinting, setIsPrinting]   = useState(false);
+  const [fromIdx, setFromIdx]       = useState(0);
+  const [toIdx, setToIdx]           = useState(PAY_PERIODS.length - 1);
+  const [csvErrors, setCsvErrors]   = useState<string[]>([]);
+  const [csvOk, setCsvOk]           = useState(false);
+  const [printQueue, setPrintQueue] = useState<PrintItem[]>([]);
+  const [isPrinting, setIsPrinting] = useState(false);
   const [zipProgress, setZipProgress] = useState<{ done: number; total: number } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const selectedStudent = students.find((s) => s.name === selectedName);
-  const selectedPeriod  = PAY_PERIODS[periodIdx];
-  const [lo, hi]        = fromIdx <= toIdx ? [fromIdx, toIdx] : [toIdx, fromIdx];
-  const allPeriodCount  = hi - lo + 1;
-  const allCount        = students.length * allPeriodCount;
-  const filteredStudents = search
-    ? students.filter((s) => s.name.toLowerCase().includes(search.toLowerCase()))
-    : students;
+  const isTestMode     = students.length === 0;
+  const effectiveStudents = isTestMode ? [TEST_STUDENT] : students;
+  const selectedStudent  = effectiveStudents.find((s) => s.name === selectedName) ?? effectiveStudents[0];
+  const selectedPeriod   = PAY_PERIODS[periodIdx];
+  const [lo, hi]         = fromIdx <= toIdx ? [fromIdx, toIdx] : [toIdx, fromIdx];
+  const allPeriodCount   = hi - lo + 1;
+  const allCount         = effectiveStudents.length * allPeriodCount;
 
-  /* ── Print queue trigger ── */
+  /* keep selectedName in sync when student list changes */
+  useEffect(() => {
+    if (!effectiveStudents.find((s) => s.name === selectedName)) {
+      setSelectedName(effectiveStudents[0]?.name ?? "");
+    }
+  }, [effectiveStudents, selectedName]);
+
+  /* print queue trigger */
   useEffect(() => {
     if (!printQueue.length) return;
     setIsPrinting(true);
@@ -101,7 +140,7 @@ export default function Dashboard({ onLogout }: Props) {
     return () => { clearTimeout(tid); window.removeEventListener("afterprint", after); };
   }, [printQueue]);
 
-  /* ── CSV upload ── */
+  /* CSV upload */
   const handleFile = useCallback((file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -122,169 +161,99 @@ export default function Dashboard({ onLogout }: Props) {
     e.target.value = "";
   };
 
-  const loadTestData = () => {
-    const test: Student[] = [
-      { name: "Marcus Johnson",  department: "WIOA Out Of School", studentId: "WD-2024-01" },
-      { name: "Destiny Rivera",  department: "WIOA Out Of School", studentId: "WD-2024-02" },
-      { name: "Jaylen Thompson", department: "WIOA Out Of School", studentId: "WD-2024-03" },
-      { name: "Aaliyah Cruz",    department: "WIOA Out Of School", studentId: "WD-2024-04" },
-      { name: "Kevin Martinez",  department: "WIOA Out Of School", studentId: "WD-2024-05" },
-    ];
-    saveStudents(test);
-    setStudents(test);
-    setSelectedName(test[0].name);
-    setCsvOk(true);
-    setCsvErrors([]);
+  const printByPeriod = () => {
+    if (!selectedPeriod) return;
+    setPrintQueue([{ student: BLANK_STUDENT, period: selectedPeriod }]);
   };
 
-  const printSingle = () => {
+  const printForStudent = () => {
     if (!selectedStudent || !selectedPeriod) return;
     setPrintQueue([{ student: selectedStudent, period: selectedPeriod }]);
   };
 
   const printAll = () => {
-    if (!students.length) return;
     const items: PrintItem[] = [];
     for (let pi = lo; pi <= hi; pi++) {
       const p = PAY_PERIODS[pi];
-      if (p) students.forEach((s) => items.push({ student: s, period: p }));
+      if (p) effectiveStudents.forEach((s) => items.push({ student: s, period: p }));
     }
     if (!items.length) return;
     setPrintQueue(items);
   };
 
   const handleZip = async () => {
-    if (!students.length) return;
     const periods = PAY_PERIODS.slice(lo, hi + 1);
-    setZipProgress({ done: 0, total: students.length * periods.length });
+    setZipProgress({ done: 0, total: effectiveStudents.length * periods.length });
     try {
-      await downloadTimesheetsZip(students, periods, (done, total) => setZipProgress({ done, total }));
+      await downloadTimesheetsZip(effectiveStudents, periods, (done, total) => setZipProgress({ done, total }));
     } finally {
       setZipProgress(null);
     }
   };
 
-  const btnPrimary = {
-    background: NAVY,
-    color: "white",
-  } as React.CSSProperties;
+  /* Determine preview timesheet to show */
+  const previewStudent = mode === "byPeriod" ? BLANK_STUDENT : selectedStudent;
+  const previewPeriod  = selectedPeriod;
 
   return (
     <>
       <div className="no-print min-h-screen flex flex-col" style={{ background: "#f0f4f9" }}>
         <Header onLogout={onLogout} />
 
-        <div className="flex flex-1 min-h-0 overflow-hidden">
-          {/* ── Sidebar ── */}
-          <aside
-            className="flex flex-col border-r border-slate-200 bg-white shrink-0 overflow-y-auto"
-            style={{ width: "340px" }}
-          >
-            <div className="p-4 space-y-5">
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-6xl mx-auto p-6 space-y-6">
 
-              {/* ── Section 1: Student Roster ── */}
-              <div>
-                <SectionLabel num="1" title="Student Roster" />
-
-                {/* Drop zone */}
-                <div
-                  onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) handleFile(f); }}
-                  onDragOver={(e) => e.preventDefault()}
-                  onClick={() => fileRef.current?.click()}
-                  className="border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl p-4 text-center cursor-pointer transition group"
-                >
-                  <svg className="w-6 h-6 mx-auto text-slate-300 group-hover:text-blue-400 mb-1.5 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            {/* ── Three Action Buttons ── */}
+            <div className="flex gap-4">
+              <ActionCard
+                active={mode === "byPeriod"}
+                onClick={() => setMode("byPeriod")}
+                icon={
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    style={{ color: mode === "byPeriod" ? "white" : NAVY }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                   </svg>
-                  <p className="text-xs font-semibold text-slate-400 group-hover:text-blue-500 transition">Upload CSV</p>
-                  <p className="text-[10px] text-slate-300 mt-0.5">Name, Department, StudentID</p>
-                </div>
-                <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onFileChange} className="hidden" />
+                }
+                title="Generate by Pay Period"
+                subtitle="Blank timesheet with dates auto-filled"
+              />
+              <ActionCard
+                active={mode === "forStudent"}
+                onClick={() => setMode("forStudent")}
+                icon={
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    style={{ color: mode === "forStudent" ? "white" : NAVY }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                }
+                title="Generate for Student"
+                subtitle="Select student + pay period"
+              />
+              <ActionCard
+                active={mode === "all"}
+                onClick={() => setMode("all")}
+                icon={
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    style={{ color: mode === "all" ? "white" : NAVY }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.056 48.056 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659" />
+                  </svg>
+                }
+                title="Generate All"
+                subtitle="All students × all pay periods"
+              />
+            </div>
 
-                <button
-                  onClick={loadTestData}
-                  className="w-full mt-2 border border-dashed border-slate-200 hover:border-blue-300 text-slate-400 hover:text-blue-500 rounded-xl py-2 text-[10px] font-bold uppercase tracking-widest transition"
-                >
-                  Load Test Data (5 Students)
-                </button>
-
-                {csvOk && students.length > 0 && (
-                  <div className="mt-2 flex items-center justify-between bg-emerald-50 border border-emerald-100 rounded-xl px-3 py-2">
-                    <p className="text-xs text-emerald-700 font-bold">✓ {students.length} students loaded</p>
-                    <button
-                      onClick={() => { clearStudents(); setStudents([]); setSelectedName(""); setCsvOk(false); }}
-                      className="text-[10px] text-red-500 hover:text-red-700 font-bold"
-                    >
-                      Clear
-                    </button>
-                  </div>
-                )}
-                {csvErrors.slice(0, 2).map((e, i) => (
-                  <p key={i} className="text-[10px] text-amber-600 mt-1">{e}</p>
-                ))}
-
-                {students.length > 0 && (
-                  <div className="mt-3">
-                    <div className="relative mb-2">
-                      <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                      </svg>
-                      <input
-                        type="text" value={search} onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search students…"
-                        className="w-full pl-8 pr-3 py-2 border border-slate-200 rounded-xl text-xs focus:outline-none"
-                        onFocus={(e) => e.currentTarget.style.borderColor = NAVY}
-                        onBlur={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
-                      />
-                    </div>
-                    <div className="space-y-1 max-h-44 overflow-y-auto">
-                      {filteredStudents.map((s) => (
-                        <button
-                          key={s.name}
-                          onClick={() => setSelectedName(s.name)}
-                          className="w-full text-left px-3 py-2 rounded-xl text-xs transition"
-                          style={selectedName === s.name
-                            ? { background: NAVY, color: "white" }
-                            : {}}
-                        >
-                          <p className={`font-semibold ${selectedName === s.name ? "text-white" : "text-slate-700"}`}>{s.name}</p>
-                          {s.studentId && (
-                            <p className={`text-[10px] ${selectedName === s.name ? "text-white/60" : "text-slate-400"}`}>{s.studentId}</p>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="h-px bg-slate-100" />
-
-              {/* ── Section 2: Generate Single Timesheet ── */}
-              <div>
-                <SectionLabel num="2" title="Generate Timesheet" />
-                {students.length === 0 ? (
-                  <p className="text-xs text-slate-400 text-center py-2">Upload a roster first.</p>
-                ) : (
-                  <div className="space-y-3">
+            {/* ── Active Panel ── */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+              {mode === "byPeriod" && (
+                <div className="flex gap-8 items-start">
+                  <div className="space-y-4 min-w-[260px]">
                     <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Student</label>
-                      <select
-                        value={selectedName}
-                        onChange={(e) => setSelectedName(e.target.value)}
-                        className="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none bg-white font-semibold"
-                        onFocus={(e) => e.currentTarget.style.borderColor = NAVY}
-                        onBlur={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
-                      >
-                        {students.map((s) => <option key={s.name} value={s.name}>{s.name}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">Pay Period</label>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Pay Period</label>
                       <select
                         value={periodIdx}
                         onChange={(e) => setPeriodIdx(Number(e.target.value))}
-                        className="w-full border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none bg-white"
+                        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none bg-white"
                         onFocus={(e) => e.currentTarget.style.borderColor = NAVY}
                         onBlur={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
                       >
@@ -292,155 +261,198 @@ export default function Dashboard({ onLogout }: Props) {
                       </select>
                     </div>
                     <button
-                      onClick={printSingle}
+                      onClick={printByPeriod}
                       disabled={isPrinting}
-                      className="w-full font-black rounded-xl py-2.5 text-[10px] uppercase tracking-widest transition disabled:opacity-40 flex items-center justify-center gap-2 hover:opacity-90"
-                      style={btnPrimary}
+                      className="w-full font-black rounded-xl py-3 text-xs uppercase tracking-widest text-white transition disabled:opacity-40 hover:opacity-90"
+                      style={{ background: NAVY }}
                     >
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.056 48.056 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659" />
-                      </svg>
+                      Print Blank Timesheet
+                    </button>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Preview</p>
+                    <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200">
+                      <div style={{ zoom: "0.68" }}>
+                        {previewPeriod && <Timesheet student={BLANK_STUDENT} period={previewPeriod} />}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {mode === "forStudent" && (
+                <div className="flex gap-8 items-start">
+                  <div className="space-y-4 min-w-[260px]">
+                    {isTestMode && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-700 font-medium">
+                        Test mode — using Isaac Nova. Upload a roster below to switch.
+                      </div>
+                    )}
+                    <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Student</label>
+                      <select
+                        value={selectedName}
+                        onChange={(e) => setSelectedName(e.target.value)}
+                        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none bg-white font-semibold"
+                        onFocus={(e) => e.currentTarget.style.borderColor = NAVY}
+                        onBlur={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
+                      >
+                        {effectiveStudents.map((s) => <option key={s.name} value={s.name}>{s.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">Pay Period</label>
+                      <select
+                        value={periodIdx}
+                        onChange={(e) => setPeriodIdx(Number(e.target.value))}
+                        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none bg-white"
+                        onFocus={(e) => e.currentTarget.style.borderColor = NAVY}
+                        onBlur={(e) => e.currentTarget.style.borderColor = "#e2e8f0"}
+                      >
+                        {PAY_PERIODS.map((pp, i) => <option key={i} value={i}>{pp.label}</option>)}
+                      </select>
+                    </div>
+                    <button
+                      onClick={printForStudent}
+                      disabled={isPrinting}
+                      className="w-full font-black rounded-xl py-3 text-xs uppercase tracking-widest text-white transition disabled:opacity-40 hover:opacity-90"
+                      style={{ background: NAVY }}
+                    >
                       Print Timesheet
                     </button>
                   </div>
-                )}
-              </div>
-
-              <div className="h-px bg-slate-100" />
-
-              {/* ── Section 3: Generate All ── */}
-              <div>
-                <SectionLabel num="3" title="Generate All &amp; Print" />
-                {students.length === 0 ? (
-                  <p className="text-xs text-slate-400 text-center py-2">Upload a roster first.</p>
-                ) : (
-                  <div className="space-y-3">
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">From PP</label>
-                        <select
-                          value={fromIdx}
-                          onChange={(e) => setFromIdx(Number(e.target.value))}
-                          className="w-full border border-slate-200 rounded-xl px-2 py-2 text-xs focus:outline-none bg-white"
-                        >
-                          {PAY_PERIODS.map((pp, i) => <option key={i} value={i}>PP{pp.id}</option>)}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">To PP</label>
-                        <select
-                          value={toIdx}
-                          onChange={(e) => setToIdx(Number(e.target.value))}
-                          className="w-full border border-slate-200 rounded-xl px-2 py-2 text-xs focus:outline-none bg-white"
-                        >
-                          {PAY_PERIODS.map((pp, i) => <option key={i} value={i}>PP{pp.id}</option>)}
-                        </select>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Preview</p>
+                    <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200">
+                      <div style={{ zoom: "0.68" }}>
+                        {previewPeriod && previewStudent && (
+                          <Timesheet student={previewStudent} period={previewPeriod} />
+                        )}
                       </div>
                     </div>
-                    <div className="bg-slate-50 rounded-xl px-3 py-2 text-[10px] text-slate-500">
-                      <strong className="text-slate-700">{students.length}</strong> students &times;{" "}
-                      <strong className="text-slate-700">{allPeriodCount}</strong> periods ={" "}
-                      <strong style={{ color: NAVY }}>{allCount} timesheets</strong>
+                  </div>
+                </div>
+              )}
+
+              {mode === "all" && (
+                <div className="space-y-4 max-w-lg">
+                  {isTestMode && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-700 font-medium">
+                      Test mode — using Isaac Nova. Upload a roster below to print all students.
                     </div>
+                  )}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">From Pay Period</label>
+                      <select
+                        value={fromIdx}
+                        onChange={(e) => setFromIdx(Number(e.target.value))}
+                        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none bg-white"
+                      >
+                        {PAY_PERIODS.map((pp, i) => <option key={i} value={i}>PP{pp.id}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1.5">To Pay Period</label>
+                      <select
+                        value={toIdx}
+                        onChange={(e) => setToIdx(Number(e.target.value))}
+                        className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none bg-white"
+                      >
+                        {PAY_PERIODS.map((pp, i) => <option key={i} value={i}>PP{pp.id}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="bg-slate-50 rounded-xl px-4 py-3 text-sm text-slate-500">
+                    <strong className="text-slate-800">{effectiveStudents.length}</strong> students &times;{" "}
+                    <strong className="text-slate-800">{allPeriodCount}</strong> periods ={" "}
+                    <strong style={{ color: NAVY }}>{allCount} timesheets</strong>
+                  </div>
+                  <div className="flex gap-3">
                     <button
                       onClick={printAll}
                       disabled={isPrinting}
-                      className="w-full bg-slate-700 hover:bg-slate-900 disabled:opacity-40 text-white font-black rounded-xl py-2.5 text-[10px] uppercase tracking-widest transition flex items-center justify-center gap-2"
+                      className="flex-1 font-black rounded-xl py-3 text-xs uppercase tracking-widest text-white transition disabled:opacity-40 hover:opacity-90"
+                      style={{ background: NAVY }}
                     >
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.056 48.056 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659" />
-                      </svg>
-                      Print All
+                      Print All Timesheets
                     </button>
-                  </div>
-                )}
-              </div>
-
-              <div className="h-px bg-slate-100" />
-
-              {/* ── Section 4: Download ZIP ── */}
-              <div>
-                <SectionLabel num="4" title="Download All as ZIP" />
-                {students.length === 0 ? (
-                  <p className="text-xs text-slate-400 text-center py-2">Upload a roster first.</p>
-                ) : (
-                  <div className="space-y-2">
-                    <p className="text-[10px] text-slate-400 leading-relaxed">
-                      Downloads HTML timesheet files for the selected PP range, zipped by student.
-                    </p>
                     <button
                       onClick={handleZip}
-                      disabled={!!zipProgress || students.length === 0}
-                      className="w-full border border-slate-200 hover:border-blue-300 text-slate-600 hover:text-blue-600 disabled:opacity-40 rounded-xl py-2.5 text-[10px] uppercase tracking-widest font-black transition flex items-center justify-center gap-2"
+                      disabled={!!zipProgress}
+                      className="flex-1 border border-slate-200 hover:border-slate-400 text-slate-600 hover:text-slate-800 disabled:opacity-40 rounded-xl py-3 text-xs uppercase tracking-widest font-black transition"
                     >
-                      {zipProgress ? (
-                        <>
-                          <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                          </svg>
-                          {zipProgress.done} / {zipProgress.total} files…
-                        </>
-                      ) : (
-                        <>
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                          </svg>
-                          Download ZIP ({allCount} files)
-                        </>
-                      )}
+                      {zipProgress
+                        ? `${zipProgress.done} / ${zipProgress.total} files…`
+                        : `Download ZIP (${allCount} files)`}
                     </button>
                   </div>
-                )}
-              </div>
-
+                </div>
+              )}
             </div>
-          </aside>
 
-          {/* ── Preview pane ── */}
-          <main className="flex-1 overflow-y-auto p-5">
-            {!selectedStudent ? (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <svg className="w-16 h-16 text-slate-200 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                </svg>
-                <p className="text-slate-400 font-semibold text-sm">Upload a student roster to get started</p>
-                <p className="text-slate-300 text-xs mt-1">Use section 1 in the sidebar →</p>
+            {/* ── Student Roster ── */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Student Roster</p>
+
+              <div className="flex gap-3 mb-4">
+                {/* Drop zone */}
+                <div
+                  onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files?.[0]; if (f) handleFile(f); }}
+                  onDragOver={(e) => e.preventDefault()}
+                  onClick={() => fileRef.current?.click()}
+                  className="flex-1 border-2 border-dashed border-slate-200 hover:border-blue-300 rounded-xl p-4 text-center cursor-pointer transition group"
+                >
+                  <svg className="w-5 h-5 mx-auto text-slate-300 group-hover:text-blue-400 mb-1 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                  </svg>
+                  <p className="text-xs font-semibold text-slate-400 group-hover:text-blue-500 transition">Upload CSV</p>
+                  <p className="text-[10px] text-slate-300 mt-0.5">Name, Department, StudentID</p>
+                </div>
+                <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onFileChange} className="hidden" />
               </div>
-            ) : (
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="font-black text-sm uppercase tracking-wider" style={{ color: NAVY }}>
-                      {selectedStudent.name}
-                    </h2>
-                    <p className="text-slate-400 text-xs mt-0.5">{selectedPeriod?.label}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-slate-400 bg-slate-100 px-3 py-1.5 rounded-full font-semibold">
-                      Screen preview
-                    </span>
-                    <button
-                      onClick={printSingle}
-                      disabled={isPrinting}
-                      className="font-black rounded-xl px-4 py-2 text-[10px] uppercase tracking-widest transition disabled:opacity-40 flex items-center gap-1.5 hover:opacity-90"
-                      style={{ background: NAVY, color: "white" }}
+
+              {csvOk && students.length > 0 && (
+                <div className="mb-3 flex items-center justify-between bg-emerald-50 border border-emerald-100 rounded-xl px-3 py-2">
+                  <p className="text-xs text-emerald-700 font-bold">✓ {students.length} students loaded</p>
+                  <button
+                    onClick={() => { clearStudents(); setStudents([]); setSelectedName(TEST_STUDENT.name); setCsvOk(false); }}
+                    className="text-[10px] text-red-500 hover:text-red-700 font-bold"
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
+
+              {csvErrors.slice(0, 2).map((e, i) => (
+                <p key={i} className="text-[10px] text-amber-600 mb-1">{e}</p>
+              ))}
+
+              {isTestMode && (
+                <div className="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-xs text-slate-500 mb-2">
+                  <span className="font-bold text-slate-600">Test student:</span> Isaac Nova — WIOA Out Of School (WD-2024-01)
+                </div>
+              )}
+
+              {!isTestMode && students.length > 0 && (
+                <div className="space-y-1 max-h-48 overflow-y-auto">
+                  {students.map((s) => (
+                    <div
+                      key={s.name}
+                      className="flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 text-xs"
                     >
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.056 48.056 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659" />
-                      </svg>
-                      Print
-                    </button>
-                  </div>
+                      <div>
+                        <span className="font-semibold text-slate-700">{s.name}</span>
+                        {s.studentId && <span className="text-slate-400 ml-2">{s.studentId}</span>}
+                      </div>
+                      <span className="text-slate-400 text-[10px]">{s.department}</span>
+                    </div>
+                  ))}
                 </div>
+              )}
+            </div>
 
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-200">
-                  <div style={{ zoom: "0.71" }}>
-                    {selectedPeriod && <Timesheet student={selectedStudent} period={selectedPeriod} />}
-                  </div>
-                </div>
-              </div>
-            )}
-          </main>
+          </div>
         </div>
 
         {/* Printing overlay */}
