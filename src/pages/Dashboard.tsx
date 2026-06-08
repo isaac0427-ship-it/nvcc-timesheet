@@ -1,3 +1,4 @@
+// Updated June 2026
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Timesheet } from "../components/Timesheet";
 import { getStudents, saveStudents, clearStudents, parseStudentCSV } from "../lib/students";
